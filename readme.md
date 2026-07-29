@@ -37,13 +37,9 @@ Esta versão do projeto reflete uma arquitetura modularizada em C++ com suporte 
 | Componente | Pino Arduino / NodeMCU | Observação |
 | --- | --- | --- |
 | MQ‑135 (VCC) | **VIN (5V)** | Alimentação obrigatória do aquecedor
-
- |
 | MQ‑135 (GND) | **GND** | Terra comum |
 | MQ‑135 (A0) | **A0 (ou via Divisor)** | Pino analógico de leitura |
 | DHT11 (VCC) | **5V / 3V3** | Alimentação lógica
-
- |
 | DHT11 (DATA) | **D2 (GPIO4 / Pin 2)** | Entrada digital |
 | DHT11 (GND) | **GND** | Terra comum |
 
@@ -116,7 +112,36 @@ A função `sendJSONData()` envia a telemetria via Serial em formato JSON minimi
 3. **Obtenção do RZero**:
 Observe o parâmetro `rzero` impresso no JSON do `sendJSONData()` para ajustar a constante padrão da biblioteca `MQ135_corr` ao seu hardware específico.
 
+Aqui está a seção pronta em Markdown para você incluir no seu **`README.md`**:
 
+---
+
+## 🐍 Integração e Ajustes via Python (Comunicação Serial)
+
+O firmware suporta o recebimento de comandos pela interface Serial, permitindo reconfigurar parâmetros como o **`RZero`** em tempo de execução, sem a necessidade de recompilar o código do Arduino.
+
+### 1. Script Python (`set_rzero.py`)
+
+Para interagir com a placa, instale a biblioteca **`pyserial`**:
+
+```bash
+pip install pyserial
+
+```
+
+Em seguida, utilize o script set_rzero.py para enviar a nova calibração, ou importe-o como uma lib (em especial a função: enviar_comando_rzero) no seu código
+
+
+---
+
+### 2. Formato do Protocolo Serial
+
+* **Comando enviado (Python → Arduino):** `SET_RZERO=76.43\n`
+* **Resposta recebida (Arduino → Python):**
+```json
+{"status":"ok","msg":"RZero atualizado para 76.43"}
+
+```
 
 ---
 
