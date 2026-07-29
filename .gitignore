@@ -1,0 +1,7 @@
+# Arquivos de compilação e temporários do Arduino / VS Code / PlatformIO
+.vscode/
+.idea/
+build/
+*.bin
+*.elf
+*.hex
