@@ -112,15 +112,13 @@ A função `sendJSONData()` envia a telemetria via Serial em formato JSON minimi
 3. **Obtenção do RZero**:
 Observe o parâmetro `rzero` impresso no JSON do `sendJSONData()` para ajustar a constante padrão da biblioteca `MQ135_corr` ao seu hardware específico.
 
-Aqui está a seção pronta em Markdown para você incluir no seu **`README.md`**:
-
 ---
 
 ## 🐍 Integração e Ajustes via Python (Comunicação Serial)
 
 O firmware suporta o recebimento de comandos pela interface Serial, permitindo reconfigurar parâmetros como o **`RZero`** em tempo de execução, sem a necessidade de recompilar o código do Arduino.
 
-### 1. Script Python (`set_rzero.py`)
+### 1. Script Python (`set_Analog_parameters.py`)
 
 Para interagir com a placa, instale a biblioteca **`pyserial`**:
 
@@ -129,7 +127,7 @@ pip install pyserial
 
 ```
 
-Em seguida, utilize o script set_rzero.py para enviar a nova calibração, ou importe-o como uma lib (em especial a função: enviar_comando_rzero) no seu código
+Em seguida, utilize o script set_Analog_parameters.py para enviar a nova calibração, ou importe-o como uma lib (em especial a função: enviar_comando_rzero) no seu código
 
 
 ---
@@ -142,7 +140,42 @@ Em seguida, utilize o script set_rzero.py para enviar a nova calibração, ou im
 {"status":"ok","msg":"RZero atualizado para 76.43"}
 
 ```
+## 🌱 Sensor Capacitivo de Umidade do Solo (Pino A1)
 
+Como opcional este hardware pode ler um sensor capacitivo de umidade de solo.
+
+  O módulo de solo utiliza um sensor capacitivo ligado na entrada analógica A1. A leitura capacitiva é inversamente proporcional à umidade (valores de ADC mais altos indicam solo seco, enquanto valores menores indicam solo molhado).
+  
+  A calibração mapeia esses limites em tempo de execução para gerar a leitura em porcentagem ($0\%$ a $100\%$).
+  
+  1. Protocolo de Calibração via Serial:
+  
+  A calibração do sensor é feita enviando os dois pontos extremos de leitura ADC: o valor no ar (seco) e o valor na água (molhado).
+  
+  Comando enviado (Python → Arduino): 
+     SET_SOIL=600,250 
+  
+  Resposta recebida (Arduino → Python):
+  ```json
+  {"status":"ok","msg":"Calibracao solo atualizada. Seco: 600 Molhado: 250"}
+
+  2. Script Python para Calibração:
+   metodo calibrar_solo do script set_Analog_parameters.py
+
+   3. Formato dos Dados no Logger (JSON)
+    Os valores bruto (soil_raw) e percentual (soil_percent) são incorporados automaticamente na saída da função sendJSONData():
+
+    {
+  "dht_ok": true,
+  "temp": 25.4,
+  "umid": 61.2,
+  "mq135_ok": true,
+  "adc_raw": 312,
+  "ppm": 11.80,
+  "rzero": 76.43,
+  "soil_raw": 340,
+  "soil_percent": 74.3
+}
 ---
 
 ## ✅ Checklist de Verificação
