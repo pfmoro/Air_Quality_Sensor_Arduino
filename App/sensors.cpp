@@ -114,6 +114,10 @@ void readSensors() {
             rzero_estimado = NAN;
         }
     }
+    // -------------------------------
+    // Umidade Solo
+    // -------------------------------
+    readSoilMoisture();
 }
 
 
@@ -123,4 +127,24 @@ float getCurrentRZero() {
 
 void setCurrentRZero(float rzero) {
     mq135.setRZero(rzero);
+}
+
+// --- Em sensors.cpp ---
+int soil_raw_adc = 0;
+float soil_percent = 0.0f;
+
+void readSoilMoisture() {
+    soil_raw_adc = analogRead(PIN_SOIL_MOISTURE);
+
+    // Mapeia o valor bruto para 0-100% invertendo a escala
+    // (valores mais altos = mais seco, valores mais baixos = mais úmido)
+    float mapped = map(soil_raw_adc, soil_moisture_dry, soil_moisture_wet, 0, 100);
+    
+    // Trava entre 0 e 100% para evitar valores negativos ou acima de 100
+    soil_percent = constrain(mapped, 0.0f, 100.0f);
+}
+
+void setSoilCalibration(int dry, int wet) {
+    soil_moisture_dry = dry;
+    soil_moisture_wet = wet;
 }

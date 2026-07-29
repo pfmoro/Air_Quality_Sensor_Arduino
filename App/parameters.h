@@ -15,8 +15,12 @@ extern float correction_factor;
 // =====================================================
 const uint8_t PIN_DHT = 2;       // Antigo D2 do NodeMCU
 const uint8_t PIN_MQ135 = A0;    // Pino Analógico A0
+const uint8_t PIN_SOIL_MOISTURE = A1; // Pino Analógico A1
 
-
+// --- Configurações do sensor capacitivo ---
+extern const uint8_t PIN_SOIL_MOISTURE;
+extern int soil_moisture_dry; // Valor lido no ar (100% seco)
+extern int soil_moisture_wet; // Valor lido na água (100% molhado)
 // =====================================================
 // SEGURANÇA
 // =====================================================

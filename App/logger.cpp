@@ -38,6 +38,13 @@ void sendJSONData() {
     if (isnan(rzero_estimado)) Serial.print(F("null"));
     else Serial.print(rzero_estimado, 2);
 
+    Serial.print(F("\"soil_raw\":"));
+    Serial.print(soil_raw_adc);
+    Serial.print(F(","));
+    
+    Serial.print(F("\"soil_percent\":"));
+    Serial.print(soil_percent, 1);
+
     Serial.println(F("}"));
 }
 
@@ -59,5 +66,25 @@ void checkSerialCommands() {
                 Serial.println(F("{\"status\":\"error\",\"msg\":\"Valor invalido\"}"));
             }
         }
+        if (input.startsWith("SET_SOIL=")) {
+            String values = input.substring(9);
+            int commaIndex = values.indexOf(',');
+            
+            if (commaIndex > 0) {
+                int dry = values.substring(0, commaIndex).toInt();
+                int wet = values.substring(commaIndex + 1).toInt();
+                
+                setSoilCalibration(dry, wet);
+                
+                Serial.print(F("{\"status\":\"ok\",\"msg\":\"Calibracao solo atualizada. Seco: "));
+                Serial.print(dry);
+                Serial.print(F(" Molhado: "));
+                Serial.print(wet);
+                Serial.println(F("\"}"));
+            } else {
+                Serial.println(F("{\"status\":\"error\",\"msg\":\"Formato invalido. Use SET_SOIL=SECO,MOLHADO\"}"));
+            }
+        }
+    
     }
 }

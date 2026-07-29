@@ -24,4 +24,11 @@ extern int mq135_raw_corrigido_adc;
 extern float ppm_corrigido;
 extern float rzero_estimado;
 
+// --- Em sensors.h ---
+extern int soil_raw_adc;
+extern float soil_percent;
+
+void readSoilMoisture();
+void setSoilCalibration(int dry, int wet);
+
 #endif // SENSORS_H
